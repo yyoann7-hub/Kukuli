@@ -211,7 +211,18 @@ function showResult(winner,reason){
     captured: lastResult.captured,
     game_data: lastResult
   })
-}).catch(e => console.error('Supabase:', e));
+}).then(async response => {
+  const text = await response.text();
+  console.log('SUPABASE STATUS:', response.status);
+  console.log('SUPABASE RESPONSE:', text);
+
+  if (!response.ok) {
+    alert('Erreur Supabase ' + response.status + ' : ' + text);
+  }
+}).catch(e => {
+  console.error('Supabase:', e);
+  alert('Erreur connexion Supabase : ' + e.message);
+});
 }
 function posHash(){return S.turn+'|'+S.ukuku+'|'+[...S.kukulis].sort((a,b)=>a-b).join(',')}
 function addLog(x){history.push(x);logEl.innerHTML=history.slice(-8).join('<br>');logEl.scrollTop=logEl.scrollHeight}

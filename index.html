@@ -193,6 +193,25 @@ function showResult(winner,reason){
    const arr=JSON.parse(localStorage.getItem('kukuli_beta_results')||'[]');
    arr.push(lastResult); localStorage.setItem('kukuli_beta_results',JSON.stringify(arr.slice(-500)));
  }catch(e){}
+  fetch(`${SUPABASE_URL}/rest/v1/Games`, {
+  method: 'POST',
+  headers: {
+    'apikey': SUPABASE_KEY,
+    'Authorization': `Bearer ${SUPABASE_KEY}`,
+    'Content-Type': 'application/json'
+  },
+  body: JSON.stringify({
+    version: lastResult.version,
+    winner: lastResult.winner,
+    reason: lastResult.reason,
+    mode: lastResult.mode,
+    human_side: lastResult.humanSide,
+    moves: lastResult.moves,
+    remaining_kukulis: lastResult.remainingKukulis,
+    captured: lastResult.captured,
+    game_data: lastResult
+  })
+}).catch(e => console.error('Supabase:', e));
 }
 function posHash(){return S.turn+'|'+S.ukuku+'|'+[...S.kukulis].sort((a,b)=>a-b).join(',')}
 function addLog(x){history.push(x);logEl.innerHTML=history.slice(-8).join('<br>');logEl.scrollTop=logEl.scrollHeight}

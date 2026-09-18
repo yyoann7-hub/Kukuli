@@ -86,6 +86,8 @@ svg{width:100%;height:auto;display:block;touch-action:manipulation}.edge{stroke:
 </div></div>
 </main>
 <script>
+  const SUPABASE_URL = 'https://uhbxruiruhmnxxtnyylu.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_ojlLyKWdBKfw-Ve8kZDjfQ_durlzqGp';
 const svg=document.getElementById('board'),statusEl=document.getElementById('status'),remainingEl=document.getElementById('remaining'),quietEl=document.getElementById('quiet'),movesEl=document.getElementById('moves'),choice=document.getElementById('captureChoice'),logEl=document.getElementById('log');
 const P=[];for(let r=0;r<5;r++)for(let c=0;c<5;c++)P.push({x:50+c*100,y:50+r*100,row:r,col:c,zone:'square'});
 P.push({x:150,y:500,zone:'den'},{x:250,y:500,zone:'den'},{x:350,y:500,zone:'den'},{x:100,y:600,zone:'den'},{x:250,y:600,zone:'den'},{x:400,y:600,zone:'den'});

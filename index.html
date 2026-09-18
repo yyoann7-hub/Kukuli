@@ -331,11 +331,46 @@ document.getElementById('copyResultBtn').onclick=async()=>{
  try{await navigator.clipboard.writeText(txt);alert('Résultat copié.');}catch(e){prompt('Copie ce résultat :',txt)}
 };
 document.getElementById('copyFeedbackBtn').onclick=async()=>{
- const type=document.getElementById('feedbackType').value, text=document.getElementById('feedbackText').value.trim();
+ const type=document.getElementById('feedbackType').value;
+ const text=document.getElementById('feedbackText').value.trim();
+ const help=document.getElementById('feedbackHelp');
+
+ if(!text){
+   help.textContent='Écris d’abord ton bug ou ta suggestion.';
+   return;
+ }
+
  const state=S?posHash():'';
- const msg=`Kukuli V1.6 - ${type}\\n${text}\\n\\nContexte: mode=${document.getElementById('mode').value}, tour=${S?.turn||''}, coups=${S?.moveCount||0}, position=${state}`;
- try{await navigator.clipboard.writeText(msg);document.getElementById('feedbackHelp').textContent='Message copié. Tu peux maintenant le coller dans ton message au créateur.';}
- catch(e){prompt('Copie ce message :',msg)}
+
+ help.textContent='Envoi en cours…';
+
+ try{
+   const response=await fetch('https://formspree.io/f/xzezzjao',{
+     method:'POST',
+     headers:{
+       'Content-Type':'application/json',
+       'Accept':'application/json'
+     },
+     body:JSON.stringify({
+       type:type,
+       message:text,
+       version:'Kukuli V1.6',
+       mode:document.getElementById('mode').value,
+       tour:S?.turn||'',
+       coups:S?.moveCount||0,
+       position:state
+     })
+   });
+
+   if(response.ok){
+     help.textContent='✅ Merci ! Ton message a bien été envoyé.';
+     document.getElementById('feedbackText').value='';
+   }else{
+     help.textContent='❌ Impossible d’envoyer le message. Réessaie dans quelques instants.';
+   }
+ }catch(e){
+   help.textContent='❌ Erreur de connexion. Réessaie dans quelques instants.';
+ }
 };
 reset();
 </script></body></html>
